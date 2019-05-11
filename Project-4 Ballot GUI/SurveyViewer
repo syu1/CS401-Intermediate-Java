@@ -1,0 +1,261 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.Random;
+import java.lang.Thread;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
+public class SurveyViewer implements ActionListener
+{
+    //not sure if i need this private
+    //ahhh ok so panel functions as one big jpanel
+    //container for the all the other jpanels such as tools and kochpanel
+    // JPanel panel, tools for whatever this does
+    //.addActionListener (this); to make the listener listen
+
+    private JFrame frame, frame2;
+    private SurveyPanel survey;
+    private JPanel loginPanel;
+    private JLabel bestMovieLabel, bestBookLabel, loginLabel;
+    private String bestMovie, bestBook;
+    private String eVote,input,message,confirmation,outPutText,votersText;
+    private JButton movieButton1,movieButton2,movieButton3;
+    private JButton bookButton1,bookButton2,bookButton3;
+    private JButton loginButton, voteButton, cancelButton, okButton,noButton;
+    private boolean login = false;
+    private boolean checkIdNum;
+    private JTextField loginTextField;
+
+    //just use no and ok button instead of extra yes button
+    //Constants for the Jframe
+    private static int WIDTH = 500;
+    private static int HEIGHT = 300;
+    private String idNum;
+    private static ArrayList<String> parseList = new ArrayList<String>();
+
+     public static void main(String[] args) throws InterruptedException, IOException
+
+    {
+       boolean hasNext = true;
+       File voters = new File("voters.txt");
+       Scanner inputFile = new Scanner(voters);
+       while(hasNext == true)
+       {
+           parseList.add(inputFile.nextLine());
+           hasNext = inputFile.hasNext();
+
+       }
+
+       SurveyViewer viewer = new SurveyViewer();
+
+    }
+    public SurveyViewer() throws InterruptedException
+
+    {
+
+        survey = new SurveyPanel();
+        //survey.setLayout(null);
+        survey.setOpaque(true);
+
+        bestMovieLabel = new JLabel("The Best Movie");
+        bestMovieLabel.setForeground (Color.white);
+        bestBookLabel = new JLabel("The Best Book");
+        bestBookLabel.setForeground (Color.white);
+
+        movieButton1 = new JButton("Inception");
+        movieButton1.addActionListener(this);
+        movieButton1.setEnabled(login);
+
+        movieButton2 = new JButton("The Dark Knight");
+        movieButton2.addActionListener(this);
+        movieButton2.setEnabled(login);
+
+        movieButton3 = new JButton("Terminator 2");
+        movieButton3.addActionListener(this);
+        movieButton3.setEnabled(login);
+
+        bookButton1 = new JButton("Graveyard Book");
+        bookButton1.addActionListener(this);
+        bookButton1.setEnabled(login);
+
+        bookButton2 = new JButton("Eragon");
+        bookButton2.addActionListener(this);
+        bookButton2.setEnabled(login);
+
+        bookButton3 = new JButton("Return of the King");
+        bookButton3.addActionListener(this);
+        bookButton3.setEnabled(login);
+
+        loginButton = new JButton("Login");
+        loginButton.addActionListener(this);
+
+        voteButton = new JButton("Cast Your Vote");
+        voteButton.addActionListener(this);
+        voteButton.setEnabled(login);
+
+        survey.add(bestMovieLabel);
+        survey.add(movieButton1);
+        survey.add(movieButton2);
+        survey.add(movieButton3);
+
+        survey.add(bestBookLabel);
+        survey.add(bookButton1);
+        survey.add(bookButton2);
+        survey.add(bookButton3);
+
+        survey.add(loginButton);
+        survey.add(voteButton);
+
+
+        //make a Jframe
+        frame = new JFrame();
+        frame.setTitle("Welcome to Sam's Survey!");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(WIDTH, HEIGHT);
+        //addes the jpanel to the jframe
+        frame.add(survey);
+        frame.setVisible(true);
+    }
+    public static int getFrameWidth()
+    {
+        return WIDTH;
+    }
+
+    /**
+     * A method that returns the height of the Jframe
+     *
+     * @return int value for the height
+     */
+    public static int getFrameHeight()
+    {
+        return HEIGHT;
+    }
+    public String getBestMovie()
+    {
+        return bestMovie;
+    }
+    public String getBestBook()
+    {
+        return bestBook;
+    }
+
+
+    /**
+     * Must have this method because of interfacing with JPanel
+     *
+     * @param event A parameter
+     */
+    public void actionPerformed (ActionEvent event)
+    {
+
+       if (event.getSource() == loginButton)
+       {
+           //login = true;
+           loginPanel = new JPanel();
+           loginPanel.setSize(new Dimension(WIDTH, HEIGHT));
+           loginPanel.setBackground(Color.black);
+           loginPanel.setOpaque(true);
+
+           loginLabel = new JLabel("Enter Voter ID Number");
+           loginTextField = new JTextField(10);
+           okButton = new JButton("OK!");
+           okButton.addActionListener(this);
+
+           loginPanel.add(loginLabel);
+           loginPanel.add(loginTextField);
+           loginPanel.add(okButton);
+
+
+           frame2 = new JFrame();
+           frame2.setTitle("Welcome to Sam's Survey!");
+           frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+           frame2.setSize(WIDTH, HEIGHT);
+
+           frame2.add(loginPanel);
+           frame2.setVisible(true);
+
+           loginButton.setEnabled(false);
+           movieButton1.setEnabled(login);
+           movieButton2.setEnabled(login);
+           movieButton3.setEnabled(login);
+
+           bookButton1.setEnabled(login);
+           bookButton2.setEnabled(login);
+           bookButton3.setEnabled(login);
+
+           voteButton.setEnabled(login);
+       }
+       if(event.getSource() == okButton)
+           {
+             String[] list = new String[0];
+             idNum = loginTextField.getText();
+             for(int i = 0; i < parseList.size()+1;i++)
+             {
+                 String line = parseList.get(i);
+                 list = line.split(":");
+             }
+             for(int j = 0; j<list.length;j++)
+             {
+               if(list[j] ==idNum)
+               {
+                   checkIdNum = true;
+               }
+               else
+               {
+                   checkIdNum = false;
+               }
+
+             }
+             System.out.println(checkIdNum);
+           }
+       if(event.getSource() == movieButton1)
+       {
+           movieButton1.setForeground(Color.red);
+           movieButton2.setForeground(Color.black);
+           movieButton3.setForeground(Color.black);
+           bestMovie = "Inception";
+       }
+       if(event.getSource() == movieButton2)
+       {
+           movieButton2.setForeground(Color.red);
+           movieButton1.setForeground(Color.black);
+           movieButton3.setForeground(Color.black);
+           bestMovie = "The Dark Knight";
+       }
+       if(event.getSource() == movieButton3)
+       {
+           movieButton3.setForeground(Color.red);
+           movieButton1.setForeground(Color.black);
+           movieButton2.setForeground(Color.black);
+           bestMovie ="Terminator 2";
+       }
+       if(event.getSource() == bookButton1)
+       {
+           bookButton1.setForeground(Color.red);
+           bookButton2.setForeground(Color.black);
+           bookButton3.setForeground(Color.black);
+           bestBook ="Graveyard Book";
+       }
+       if(event.getSource() == bookButton2)
+       {
+           bookButton2.setForeground(Color.red);
+           bookButton1.setForeground(Color.black);
+           bookButton3.setForeground(Color.black);
+           bestBook = "Eragon";
+       }
+       if(event.getSource() == bookButton3)
+       {
+           bookButton3.setForeground(Color.red);
+           bookButton2.setForeground(Color.black);
+           bookButton1.setForeground(Color.black);
+           bestBook = "Return of the King";
+       }
+       if(event.getSource() == voteButton)
+       {
+           //push it to file
+        }
+    }
+}
